@@ -1,8 +1,10 @@
 /* check all orders with ingredients */
 select *
 from
-    ingredient_ref i
-        inner join taco t
-                   on i.taco = t.id
+    taco_order_tacos ot
         inner join taco_order o
-                   on t.taco_order = o.id
+                   on ot.taco_order_id = o.id
+        inner join taco t
+                   on ot.tacos_id = t.id
+        inner join taco_ingredients i
+                   on i.taco_id = t.id
