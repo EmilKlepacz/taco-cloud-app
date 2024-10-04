@@ -9,3 +9,11 @@ spring:
   sql:
     init:
       mode: always  # Ensure SQL scripts are always run
+  security:
+    user:
+      # set env variables on your os for example:
+      # export SPRING_SECURITY_USER_NAME=yourUsername
+      # export SPRING_SECURITY_USER_PASSWORD=yourPassword
+      # remove if You want random generated password from spring security
+      name: ${SPRING_SECURITY_USER_NAME}
+      password: ${SPRING_SECURITY_USER_PASSWORD}
