@@ -7,6 +7,10 @@
     </head>
     <body>
 
+        <form method="POST" th:action="@{/logout}">
+            <input type="submit" value="Logout"/>
+        </form>
+
         <form method="POST" th:action="@{/orders}" th:object="${tacoOrder}">
             <h1>Order Your tacos!</h1>
             <a th:href="@{/design}" id="another">Design another taco</a></br>

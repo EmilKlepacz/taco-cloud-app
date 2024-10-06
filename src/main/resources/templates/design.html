@@ -6,6 +6,11 @@
         <link rel="stylesheet" th:href="@{/styles.css}"/>
     </head>
     <body>
+
+        <form method="POST" th:action="@{/logout}">
+            <input type="submit" value="Logout"/>
+        </form>
+
         <h2>Welcome to...</h2>
         <img th:src="@{/images/TacoCloud.png}" style="width: 70px; height: auto;"/>
 
@@ -71,6 +76,5 @@
                 <button>Submit Your Taco</button>
             </div>
         </form>
-
     </body>
 </html>
