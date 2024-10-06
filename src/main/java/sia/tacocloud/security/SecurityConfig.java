@@ -39,7 +39,11 @@ public class SecurityConfig {
                 .requestMatchers("/", "/**").permitAll()
                 .and()
 
-                .formLogin(withDefaults())
+                .formLogin(form -> form
+                        .loginPage("/login") // URL of your custom login page
+                        .defaultSuccessUrl("/design") // go to design when logged in
+                        .permitAll() // Allow everyone to see the login page
+                )
 
                 .logout(logout -> logout.logoutSuccessUrl("/"))
 
