@@ -8,12 +8,14 @@ spring:
     password:     # Default password for H2 (leave empty for no password)
   sql:
     init:
-      mode: always  # Ensure SQL scripts are always run
-  security:
-    user:
-      # set env variables on your os for example:
-      # export SPRING_SECURITY_USER_NAME=yourUsername
-      # export SPRING_SECURITY_USER_PASSWORD=yourPassword
-      # remove if You want random generated password from spring security
-      name: ${SPRING_SECURITY_USER_NAME}
-      password: ${SPRING_SECURITY_USER_PASSWORD}
+      # Ensure SQL scripts are always run
+      mode: always
+  jpa:
+    properties:
+      hibernate:
+        # Format SQL queries for readability
+        format_sql: true
+#logging:
+#  level:
+#    org.hibernate.SQL: debug
+#    org.hibernate.orm.jdbc.bind: trace

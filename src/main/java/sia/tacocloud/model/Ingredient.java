@@ -5,17 +5,17 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Data
+@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Ingredient {
 
     @Id
-    private String id;
+    private final String id;
 
-    private String name;
+    private final String name;
 
-    private Type type;
+    private final Type type;
 
     public enum Type {
         WRAP, PROTEIN, VEGGIES, CHEESE, SAUCE
