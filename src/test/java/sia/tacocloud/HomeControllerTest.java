@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import sia.tacocloud.repository.IngredientRepository;
 
@@ -21,6 +22,7 @@ public class HomeControllerTest {
     private IngredientRepository ingredientRepository; // Mock the missing repository
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     public void testHomePage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())

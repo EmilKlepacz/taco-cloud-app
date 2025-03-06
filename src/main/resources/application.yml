@@ -8,7 +8,9 @@ spring:
     password:     # Default password for H2 (leave empty for no password)
   sql:
     init:
-      # Ensure SQL scripts are always run
+      # Ensures schema.sql always runs
+      # when schema.sql is changed please: mvn clean install; and then:
+      # ./mvnw spring-boot:run
       mode: always
   jpa:
     properties:
