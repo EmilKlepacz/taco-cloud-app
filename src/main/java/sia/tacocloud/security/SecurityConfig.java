@@ -35,8 +35,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
-                .requestMatchers("/design", "/orders").hasRole("USER")
-                .requestMatchers("/", "/**").permitAll()
+                .requestMatchers("/design", "/orders").hasRole("USER") // requires authentication
+                .requestMatchers("/", "/**").permitAll() // Everything else is public
                 .and()
 
                 .formLogin(form -> form

@@ -19,7 +19,9 @@ spring:
         format_sql: true
   thymeleaf:
     cache: false
-#logging:
-#  level:
-#    org.hibernate.SQL: debug
-#    org.hibernate.orm.jdbc.bind: trace
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+    org.springframework.security: debug
+    org.springframework.web: debug

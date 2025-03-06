@@ -8,6 +8,8 @@
     <body>
 
         <form method="POST" th:action="@{/logout}">
+            <!-- CSRF Token for Security -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <input type="submit" value="Logout"/>
         </form>
 
@@ -15,6 +17,8 @@
         <img th:src="@{/images/TacoCloud.png}" style="width: 70px; height: auto;"/>
 
         <form method="POST" th:object="${taco}">
+            <!-- CSRF Token for Security -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
             <div class="grid">
                 <div class="ingredient-group" id="wraps">
