@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import sia.tacocloud.model.TacoOrder;
 import sia.tacocloud.repository.OrderRepository;
+import sia.tacocloud.service.OrderService;
 
 @Slf4j
 @Controller
@@ -16,10 +17,10 @@ import sia.tacocloud.repository.OrderRepository;
 @SessionAttributes("tacoOrder")
 public class OrderController {
 
-    private OrderRepository orderRepository;
+    private OrderService orderService;
 
-    public OrderController(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @ModelAttribute(name = "tacoOrder")
@@ -34,7 +35,7 @@ public class OrderController {
         }
 
 //        log.info("Order submitted: {}", order);
-        orderRepository.save(order);
+        orderService.processOrder(order);
         sessionStatus.setComplete();
 
         return "redirect:/";

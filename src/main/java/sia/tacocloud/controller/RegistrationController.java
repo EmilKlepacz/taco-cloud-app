@@ -7,17 +7,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import sia.tacocloud.RegistrationForm;
 import sia.tacocloud.repository.UserRepository;
+import sia.tacocloud.service.RegistrationService;
 
 @Controller
 @RequestMapping("/register")
 public class RegistrationController {
 
-    private UserRepository userRepo;
-    private PasswordEncoder passwordEncoder;
+    private RegistrationService registrationService;
 
-    public RegistrationController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepo = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public RegistrationController(RegistrationService registrationService) {
+        this.registrationService = registrationService;
     }
 
     @GetMapping
@@ -27,7 +26,7 @@ public class RegistrationController {
 
     @PostMapping
     public String processRegistration(RegistrationForm form) {
-        userRepo.save(form.toUser(passwordEncoder));
+        registrationService.processRegistration(form);
         return "redirect:/login";
     }
 

@@ -18,6 +18,7 @@ import sia.tacocloud.model.Ingredient.Type;
 import sia.tacocloud.model.Taco;
 import sia.tacocloud.model.TacoOrder;
 import sia.tacocloud.repository.IngredientRepository;
+import sia.tacocloud.service.IngredientService;
 
 @Slf4j
 @Controller
@@ -25,23 +26,16 @@ import sia.tacocloud.repository.IngredientRepository;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
-    private final IngredientRepository ingredientRepo;
+    private final IngredientService ingredientService;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo) {
-        this.ingredientRepo = ingredientRepo;
+    public DesignTacoController(IngredientService ingredientService) {
+        this.ingredientService = ingredientService;
     }
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredientRepo.findAll().forEach(ingredient -> ingredients.add(ingredient));
-
-        Type[] types = Ingredient.Type.values();
-        for (Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(),
-                    filterByType(ingredients, type));
-        }
+        ingredientService.addIngredientsToModel(model);
     }
 
     @ModelAttribute(name = "tacoOrder")
@@ -70,12 +64,5 @@ public class DesignTacoController {
         log.info("Process taco {}", tacoOrder.toString());
 
         return "redirect:/orders/current";
-    }
-
-    private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
-        return ingredients
-                .stream()
-                .filter(x -> x.getType().equals(type))
-                .collect(Collectors.toList());
     }
 }
