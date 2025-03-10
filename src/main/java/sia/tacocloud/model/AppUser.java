@@ -1,9 +1,6 @@
 package sia.tacocloud.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -36,9 +35,17 @@ public class AppUser implements UserDetails {
     private final String zip;
     private final String phoneNumber;
 
+    @ManyToMany
+    private final Set<Role> roles;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        Set<String> roleNames = roles.stream().map(Role::getName).collect(Collectors.toSet());
+        roleNames.add("USER"); // ensure USER role is always included for every user
+
+        return roleNames.stream()
+                .map(roleName -> new SimpleGrantedAuthority("ROLE_" + roleName))
+                .collect(Collectors.toList());
     }
 
     @Override

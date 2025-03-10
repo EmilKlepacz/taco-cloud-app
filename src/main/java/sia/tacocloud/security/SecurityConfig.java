@@ -23,12 +23,8 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepo) {
-        return username -> {
-            AppUser appUser = userRepo.findByUsername(username);
-            if (appUser != null) return appUser;
-
-            throw new UsernameNotFoundException("Username: " + username + " not found.");
-        };
+        return username -> userRepo.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found."));
     }
 
     @Bean

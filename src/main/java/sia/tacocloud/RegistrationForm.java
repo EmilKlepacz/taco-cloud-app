@@ -3,6 +3,12 @@ package sia.tacocloud;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sia.tacocloud.model.AppUser;
+import sia.tacocloud.model.Role;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class RegistrationForm {
@@ -25,7 +31,8 @@ public class RegistrationForm {
                 city,
                 state,
                 zip,
-                phone);
+                phone,
+                Set.of(new Role("USER")));
     }
 
 }
