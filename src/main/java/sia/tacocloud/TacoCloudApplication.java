@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import sia.tacocloud.model.Ingredient;
 import sia.tacocloud.repository.IngredientRepository;
 import sia.tacocloud.service.IngredientService;
+import sia.tacocloud.service.RoleService;
 import sia.tacocloud.service.UserService;
 
 @SpringBootApplication
@@ -17,9 +18,12 @@ public class TacoCloudApplication {
     }
 
     @Bean
-    public CommandLineRunner dataLoader(IngredientService ingredientService, UserService userService) {
+    public CommandLineRunner dataLoader(IngredientService ingredientService,
+                                        UserService userService,
+                                        RoleService roleService) {
         return args -> {
             ingredientService.initIngredients();
+            roleService.initRoles();
             userService.initUsers();
         };
     }

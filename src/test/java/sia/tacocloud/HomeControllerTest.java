@@ -9,6 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import sia.tacocloud.repository.IngredientRepository;
 import sia.tacocloud.service.IngredientService;
+import sia.tacocloud.service.RoleService;
 import sia.tacocloud.service.UserService;
 
 import static org.hamcrest.Matchers.containsString;
@@ -30,6 +31,9 @@ public class HomeControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private RoleService roleService;
 
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
