@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import sia.tacocloud.model.AppUser;
 import sia.tacocloud.repository.UserRepository;
 
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -27,18 +28,27 @@ public class SecurityConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found."));
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
-                .requestMatchers("/design", "/orders").hasRole("USER") // requires authentication
+                // ROLE_USER -> role added for all logged users
+                // OAUTH2_USER -> this is authority granted when logged with gitHub OAuth2
+                .requestMatchers("/design", "/orders").hasAnyAuthority("ROLE_USER", "OAUTH2_USER") // requires authentication
                 .requestMatchers("/", "/**").permitAll() // Everything else is public
-                .and()
 
+                .and()
                 .formLogin(form -> form
                         .loginPage("/login") // URL of your custom login page
                         .defaultSuccessUrl("/design") // go to design when logged in
                         .permitAll() // Allow everyone to see the login page
+                )
+
+                // OAuth2 Login Config for login with GitHub
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/design")
                 )
 
                 .logout(logout -> logout.logoutSuccessUrl("/"))
