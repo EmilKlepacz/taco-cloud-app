@@ -2,6 +2,7 @@ package sia.tacocloud.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sia.tacocloud.model.Role;
 import sia.tacocloud.repository.RoleRepository;
 
