@@ -2,6 +2,7 @@ package sia.tacocloud.service;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -28,6 +29,13 @@ public class OrderService {
 
     public void processOrder(@Valid TacoOrder order) {
         orderRepository.save(order);
+    }
+
+    // pre-authorize for ADMIN only in case this some other
+    // service / controller will call this method
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteAllOrders() {
+        orderRepository.deleteAll();
     }
 
     public void initOrders() {

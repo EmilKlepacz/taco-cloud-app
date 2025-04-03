@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin Panel Prototype</title>
+    </head>
+    <body>
+        <h2>Admin Panel</h2>
+
+        <form th:action="@{admin/action}" method="post">
+            <button type="submit">Delete all orders</button>
+            <p th:if="${message}" th:text="${message}"></p>
+        </form>
+    </body>
+</html>
