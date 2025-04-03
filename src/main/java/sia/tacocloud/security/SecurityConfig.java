@@ -38,6 +38,7 @@ public class SecurityConfig {
                 // ROLE_USER -> role added for all logged users
                 // OAUTH2_USER -> this is authority granted when logged with gitHub OAuth2
                 .requestMatchers("/design", "/orders").hasAnyAuthority("ROLE_USER", "OAUTH2_USER") // requires authentication
+                .requestMatchers("/admin").hasRole("ADMIN")
                 .requestMatchers("/", "/**").permitAll() // Everything else is public
 
                 .and()
