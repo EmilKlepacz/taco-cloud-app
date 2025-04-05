@@ -3,14 +3,17 @@ package sia.tacocloud.service;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.support.SessionStatus;
+import sia.tacocloud.model.AppUser;
 import sia.tacocloud.model.Taco;
 import sia.tacocloud.model.TacoOrder;
 import sia.tacocloud.repository.OrderRepository;
 import sia.tacocloud.repository.TacoRepository;
+import sia.tacocloud.repository.UserRepository;
 
 import java.util.List;
 
@@ -19,12 +22,15 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final TacoRepository tacoRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
-                        TacoRepository tacoRepository) {
+                        TacoRepository tacoRepository,
+                        UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.tacoRepository = tacoRepository;
+        this.userRepository = userRepository;
     }
 
     public void processOrder(@Valid TacoOrder order) {
@@ -39,6 +45,9 @@ public class OrderService {
     }
 
     public void initOrders() {
+        AppUser apiUser = userRepository.findByUsername("api.user").orElseThrow(() ->
+                new RuntimeException("api.user not found"));
+
         // dummy order 1
         Taco t1 = tacoRepository.findByName("Initial_Taco_1").orElseThrow(() ->
                 new RuntimeException("Initial_Taco_1 not found"));
@@ -55,6 +64,7 @@ public class OrderService {
         order1.setCcNumber("374245455400126");
         order1.setCcExpiration("10/30");
         order1.setTacos(List.of(t1, t2));
+        order1.setUser(apiUser);
 
         orderRepository.save(order1);
 
@@ -72,6 +82,7 @@ public class OrderService {
         order2.setCcNumber("374245455400126");
         order2.setCcExpiration("10/30");
         order2.setTacos(List.of(t3));
+        order2.setUser(apiUser);
 
         orderRepository.save(order2);
     }

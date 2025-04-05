@@ -32,23 +32,53 @@ public class UserService {
     }
 
     public void initUsers() {
-        Optional<AppUser> adminUser = findByUsername("admin");
-        if (adminUser.isEmpty()) {
+        if (findByUsername("admin").isEmpty()) {
             Role roleAdmin = roleRepository.findByName("ADMIN")
                     .orElseThrow(() -> new RuntimeException("No ADMIN role found"));
 
-            AppUser admin = new AppUser(
+            AppUser adminUser = new AppUser(
                     "admin",
                     passwordEncoder.encode("test"),
                     "Admin User",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
+                    "Dummny Street",
+                    "Dummy City",
+                    "Dummy State",
+                    "Dummy Zip",
+                    "+48 123 456 789",
                     Set.of(roleAdmin)
             );
-            userRepository.save(admin);
+            userRepository.save(adminUser);
+        }
+
+        if (findByUsername("test.user").isEmpty()) {
+            AppUser testUser = new AppUser(
+                    "test.user",
+                    passwordEncoder.encode("test"),
+                    "Test User",
+                    "Dummny Street",
+                    "Dummy City",
+                    "Dummy State",
+                    "Dummy Zip",
+                    "+48 123 456 789",
+                    null
+            );
+            userRepository.save(testUser);
+        }
+
+        // for actions made by 'application'
+        if (findByUsername("api.user").isEmpty()) {
+            AppUser testUser = new AppUser(
+                    "api.user",
+                    passwordEncoder.encode("test"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            userRepository.save(testUser);
         }
     }
 }
