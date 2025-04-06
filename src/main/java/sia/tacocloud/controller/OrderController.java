@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import sia.tacocloud.model.AppUser;
 import sia.tacocloud.model.TacoOrder;
+import sia.tacocloud.props.OrderProps;
 import sia.tacocloud.service.OrderService;
 
 import java.util.List;
@@ -21,18 +22,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/orders")
 @SessionAttributes("tacoOrder")
-@ConfigurationProperties(prefix = "taco.orders")
 public class OrderController {
-    private int pageSize; //page size for listing historical orders;
 
+    private OrderProps props;
     private OrderService orderService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderProps props) {
         this.orderService = orderService;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+        this.props = props;
     }
 
     @ModelAttribute(name = "tacoOrder")
@@ -42,7 +39,7 @@ public class OrderController {
 
     @ModelAttribute(name = "ordersHistory") //historical tacos ordered by user
     public List<TacoOrder> ordersHistory(@AuthenticationPrincipal AppUser user) {
-        Pageable pageable = PageRequest.of(0, pageSize);
+        Pageable pageable = PageRequest.of(0, props.getPageSize());
         return orderService.ordersForUser(user, pageable);
     }
 
