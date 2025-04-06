@@ -2,7 +2,10 @@ package sia.tacocloud.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor

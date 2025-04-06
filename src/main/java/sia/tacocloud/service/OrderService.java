@@ -2,13 +2,11 @@ package sia.tacocloud.service;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.support.SessionStatus;
 import sia.tacocloud.model.AppUser;
 import sia.tacocloud.model.Taco;
 import sia.tacocloud.model.TacoOrder;
@@ -17,6 +15,7 @@ import sia.tacocloud.repository.TacoRepository;
 import sia.tacocloud.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -34,13 +33,31 @@ public class OrderService {
         this.userRepository = userRepository;
     }
 
-    public void processOrder(@Valid TacoOrder order) {
-        orderRepository.save(order);
+    public TacoOrder saveOrder(@Valid TacoOrder order) {
+        return orderRepository.save(order);
     }
 
     public List<TacoOrder> ordersForUser(@AuthenticationPrincipal AppUser user, Pageable pageable) {
         return orderRepository.findByUserOrderByPlacedAtDesc(user, pageable);
     }
+
+    public TacoOrder updateOrder(Long orderId, @Valid TacoOrder order) {
+        order.setId(orderId);
+        return orderRepository.save(order);
+    }
+
+    public Optional<TacoOrder> getOrderById(Long orderId) {
+        return orderRepository.findById(orderId);
+    }
+
+    public void deleteOrderById(Long orderId) {
+        try {
+            orderRepository.deleteById(orderId);
+        } catch (EmptyResultDataAccessException e) {
+            //do nothing about it
+        }
+    }
+
 
     // pre-authorize for ADMIN only in case this some other
     // service / controller will call this method

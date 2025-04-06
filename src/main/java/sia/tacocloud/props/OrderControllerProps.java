@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "taco.orders")
 @Data
 @Validated
-public class OrderProps {
+public class OrderControllerProps {
 
     @Min(value = 5, message = "must be between 5 and 25")
     @Max(value = 25, message = "must be between 5 and 25")

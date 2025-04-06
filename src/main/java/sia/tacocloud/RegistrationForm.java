@@ -5,9 +5,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import sia.tacocloud.model.AppUser;
 import sia.tacocloud.model.Role;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data

@@ -3,12 +3,7 @@ package sia.tacocloud.converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import sia.tacocloud.model.Ingredient;
-import sia.tacocloud.model.Ingredient.Type;
 import sia.tacocloud.repository.IngredientRepository;
 
 @Component

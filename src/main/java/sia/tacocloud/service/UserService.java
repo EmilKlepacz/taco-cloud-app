@@ -7,7 +7,6 @@ import sia.tacocloud.model.AppUser;
 import sia.tacocloud.model.Role;
 import sia.tacocloud.repository.RoleRepository;
 import sia.tacocloud.repository.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;

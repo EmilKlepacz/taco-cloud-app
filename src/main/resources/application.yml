@@ -27,6 +27,9 @@ spring:
             client-id: ${GITHUB_CLIENT_ID}         # store this in env variable for security purposes
             client-secret: ${GITHUB_CLIENT_SECRET} # store this in env variable for security purposes
             scope: user:email
+  data:
+    rest:
+      base-path: /data-api # for Spring Data REST automatically generated endpoints based on repositories
 logging:
   level:
     org.hibernate.SQL: debug
