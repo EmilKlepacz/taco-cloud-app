@@ -2,6 +2,7 @@ package sia.tacocloud.service;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,10 @@ public class OrderService {
 
     public void processOrder(@Valid TacoOrder order) {
         orderRepository.save(order);
+    }
+
+    public List<TacoOrder> ordersForUser(@AuthenticationPrincipal AppUser user, Pageable pageable) {
+        return orderRepository.findByUserOrderByPlacedAtDesc(user, pageable);
     }
 
     // pre-authorize for ADMIN only in case this some other
@@ -85,5 +90,30 @@ public class OrderService {
         order2.setUser(apiUser);
 
         orderRepository.save(order2);
+
+        // adding many orders for test users on start for test purposes
+        AppUser testUser = userRepository.findByUsername("test.user").orElseThrow(() ->
+                new RuntimeException("test.user not found"));
+
+        for (int i = 1; i <= 100; i++) {
+            // dummy order 1
+            final int finalI = i;
+            Taco taco = tacoRepository.findByName("Paging_Test_Taco_" + i).orElseThrow(() ->
+                    new RuntimeException("Paging_Test_Taco_" + finalI + " not found"));
+
+            TacoOrder tacoOrder = new TacoOrder();
+            tacoOrder.setDeliveryCity("Some Dummy City");
+            tacoOrder.setDeliveryName("Some Dummy Name");
+            tacoOrder.setDeliveryState("Some Dummy State");
+            tacoOrder.setDeliveryStreet("Some Dummy Street");
+            tacoOrder.setDeliveryZip("Some Dummy Zip");
+            tacoOrder.setCcCVV("123");
+            tacoOrder.setCcNumber("374245455400126");
+            tacoOrder.setCcExpiration("10/30");
+            tacoOrder.setTacos(List.of(taco));
+            tacoOrder.setUser(testUser);
+
+            orderRepository.save(tacoOrder);
+        }
     }
 }

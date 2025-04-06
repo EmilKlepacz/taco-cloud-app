@@ -50,5 +50,13 @@ public class TacoService {
         t3.setName("Initial_Taco_3");
         t3.setIngredients(ingredients);
         tacoRepository.save(t3);
+
+        // many records for some testing of paging
+        for (int i = 1; i <= 100; i++) {
+            Taco taco = new Taco();
+            taco.setName("Paging_Test_Taco_" + i);
+            taco.setIngredients(ingredients);
+            tacoRepository.save(taco);
+        }
     }
 }
