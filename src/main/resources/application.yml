@@ -30,6 +30,12 @@ spring:
   data:
     rest:
       base-path: /data-api # for Spring Data REST automatically generated endpoints based on repositories
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true # this one is for visibility of the console from docker...
 logging:
   level:
     org.hibernate.SQL: debug
