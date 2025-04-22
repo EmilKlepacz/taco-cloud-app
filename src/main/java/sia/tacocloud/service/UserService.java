@@ -36,6 +36,7 @@ public class UserService {
                     .orElseThrow(() -> new RuntimeException("No ADMIN role found"));
 
             AppUser adminUser = new AppUser(
+                    null,
                     "admin",
                     passwordEncoder.encode("test"),
                     "Admin User",
@@ -51,6 +52,7 @@ public class UserService {
 
         if (findByUsername("test.user").isEmpty()) {
             AppUser testUser = new AppUser(
+                    null,
                     "test.user",
                     passwordEncoder.encode("test"),
                     "Test User",
@@ -67,6 +69,7 @@ public class UserService {
         // for actions made by 'application'
         if (findByUsername("api.user").isEmpty()) {
             AppUser testUser = new AppUser(
+                    null,
                     "api.user",
                     passwordEncoder.encode("test"),
                     null,

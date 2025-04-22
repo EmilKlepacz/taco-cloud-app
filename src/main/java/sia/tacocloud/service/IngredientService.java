@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import sia.tacocloud.model.Ingredient;
 import sia.tacocloud.repository.IngredientRepository;
+import sia.tacocloud.model.enums.IngredientType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class IngredientService {
         this.ingredientRepository = ingredientRepository;
     }
 
-    private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Ingredient.Type type) {
+    private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, IngredientType type) {
         return ingredients
                 .stream()
                 .filter(x -> x.getType().equals(type))
@@ -30,8 +31,8 @@ public class IngredientService {
         List<Ingredient> ingredients = new ArrayList<>();
         ingredientRepository.findAll().forEach(ingredient -> ingredients.add(ingredient));
 
-        Ingredient.Type[] types = Ingredient.Type.values();
-        for (Ingredient.Type type : types) {
+        IngredientType[] types = IngredientType.values();
+        for (IngredientType type : types) {
             model.addAttribute(type.toString().toLowerCase(),
                     filterByType(ingredients, type));
         }
@@ -40,16 +41,16 @@ public class IngredientService {
     public void initIngredients() {
         if (ingredientRepository.count() == 0) {
             ingredientRepository.saveAll(List.of(
-                    new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-                    new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-                    new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-                    new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-                    new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-                    new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-                    new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-                    new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-                    new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-                    new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE)
+                    new Ingredient("FLTO", "Flour Tortilla", IngredientType.WRAP),
+                    new Ingredient("COTO", "Corn Tortilla", IngredientType.WRAP),
+                    new Ingredient("GRBF", "Ground Beef", IngredientType.PROTEIN),
+                    new Ingredient("CARN", "Carnitas", IngredientType.PROTEIN),
+                    new Ingredient("TMTO", "Diced Tomatoes", IngredientType.VEGGIES),
+                    new Ingredient("LETC", "Lettuce", IngredientType.VEGGIES),
+                    new Ingredient("CHED", "Cheddar", IngredientType.CHEESE),
+                    new Ingredient("JACK", "Monterrey Jack", IngredientType.CHEESE),
+                    new Ingredient("SLSA", "Salsa", IngredientType.SAUCE),
+                    new Ingredient("SRCR", "Sour Cream", IngredientType.SAUCE)
             ));
         }
     }

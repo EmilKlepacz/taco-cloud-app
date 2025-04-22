@@ -94,3 +94,7 @@ example of usage for template based generated endpoint:
 ```bash
 curl "http://localhost:8080/data-api/tacoOrders?page=0&size=5"
 ```
+
+* Mappings generation with MapStruct (binding for Lombok and MapStruct):
+    * configuration of Annotation processor path with both 
+    * mappings between entities and DTOs. (important: DTOs stored in separate project taco-cloud-dto!)

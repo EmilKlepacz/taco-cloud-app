@@ -20,7 +20,7 @@ public class RoleService {
 
     public void initRoles() {
         if (roleRepository.count() == 0) {
-            Role role = new Role("ADMIN");
+            Role role = new Role(null, "ADMIN");
             roleRepository.save(role);
         }
     }

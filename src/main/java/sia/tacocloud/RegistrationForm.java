@@ -21,6 +21,7 @@ public class RegistrationForm {
 
     public AppUser toUser(PasswordEncoder passwordEncoder) {
         return new AppUser(
+                null,
                 username,
                 passwordEncoder.encode(password),
                 fullname,
@@ -29,7 +30,7 @@ public class RegistrationForm {
                 state,
                 zip,
                 phone,
-                Set.of(new Role("USER")));
+                Set.of(new Role(null, "USER")));
     }
 
 }
