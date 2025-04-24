@@ -25,9 +25,12 @@ have for further development with some examples.
     * usage of @AuthenticationPrincipal for taking information about authenticated user
 * fine-tuning autoconfiguration
 * own configuration properties
-* REST api (added manually by org.springframework.web.bind.annotation) <br>
-  examples:
 
+---
+* REST api (added manually by org.springframework.web.bind.annotation) <br>
+  examples: <br><br> 
+
+<b>GET</b>:
 ```bash
 curl -s "http://localhost:8080/api/tacos?recent" | jq
 ```
@@ -40,8 +43,9 @@ curl "http://localhost:8080/api/tacos?recent&page=0&size=5" | jq
 curl -s "http://localhost:8080/api/tacos/95" | jq 
 ``` 
 
+<b>POST</b>:
 ```bash
-taco-cloud % curl -X POST http://localhost:8080/api/tacos \
+curl -X POST http://localhost:8080/api/tacos \
 -H "Content-Type: application/json" \
 -d '{
 "name": "Veggie Blast",
@@ -53,6 +57,7 @@ taco-cloud % curl -X POST http://localhost:8080/api/tacos \
 }' 
  ``` 
 
+<b>PUT</b>:
 ```bash
 curl -X PUT http://localhost:8080/api/orders/1 \
   -H "Content-Type: application/json" \
@@ -76,14 +81,37 @@ curl -X PUT http://localhost:8080/api/orders/1 \
         ]
       }
     ]
-  }'
+  }' | jq
 ```
 
+<b>PATCH</b>:
+```bash
+curl -X PATCH http://localhost:8080/api/orders/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "deliveryCity": "Berlin",
+    "tacos": [
+      {
+        "id": 2,
+        "name": "Veggie Fiesta",
+        "ingredients": [
+          { "id": "COTO", "name": "Corn Tortilla", "type": "WRAP" },
+          { "id": "LETC", "name": "Lettuce", "type": "VEGGIES" },
+          { "id": "SLSA", "name": "Salsa", "type": "SAUCE" }
+        ]
+      }
+    ]
+  }' | jq
+```
+
+<b>DELETE</b>:
 ```bash
 curl -s -X DELETE http://localhost:8080/api/orders/1 
 ```
 
-* Spring Data REST:
+---
+
+* Spring Data REST: <br>
   to see generated endpoints look at:
 
 ```bash
@@ -96,5 +124,5 @@ curl "http://localhost:8080/data-api/tacoOrders?page=0&size=5"
 ```
 
 * Mappings generation with MapStruct (binding for Lombok and MapStruct):
-    * configuration of Annotation processor path with both 
+    * DTO objects work with REST (REST controllers manually created) 
     * mappings between entities and DTOs. (important: DTOs stored in separate project taco-cloud-dto!)

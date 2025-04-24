@@ -1,14 +1,19 @@
 package sia.tacocloud.controller.rest;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sia.tacocloud.dto.TacoDTO;
+import sia.tacocloud.mapper.TacoMapper;
 import sia.tacocloud.model.Taco;
 import sia.tacocloud.service.TacoService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/tacos",
@@ -18,31 +23,40 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://tacocloud:8080")
 public class TacoRestController {
     private final TacoService tacoService;
+    private final TacoMapper tacoMapper;
 
-    public TacoRestController(TacoService tacoService) {
+    public TacoRestController(TacoService tacoService, TacoMapper tacoMapper) {
         this.tacoService = tacoService;
+        this.tacoMapper = tacoMapper;
     }
 
     @GetMapping(params = "recent")
-    public Page<Taco> recentTacos(
+    public Page<TacoDTO> recentTacos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size) {
+
         PageRequest pageRequest = PageRequest.of(page, size);
-        return tacoService.lastAddedTacos(pageRequest);
+        Page<Taco> tacos = tacoService.lastAddedTacos(pageRequest);
+
+        List<TacoDTO> tacoDTOs = tacos.stream()
+                .map(tacoMapper::toDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(tacoDTOs, pageRequest, tacos.getTotalElements());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Taco> getTaco(@PathVariable Long id) {
-        Optional<Taco> taco = tacoService.getTacoById(id);
-        if (taco.isPresent()) {
-            return new ResponseEntity<>(taco.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    public ResponseEntity<TacoDTO> getTaco(@PathVariable Long id) {
+        Optional<Taco> tacoOpt = tacoService.getTacoById(id);
+        return tacoOpt.map(taco -> new ResponseEntity<>(tacoMapper.toDto(taco), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Taco createTaco(@RequestBody Taco taco) {
-        return tacoService.createTaco(taco);
+    public TacoDTO createTaco(@RequestBody TacoDTO tacoDto) {
+        Taco taco = tacoMapper.toEntity(tacoDto);
+        Taco createdTaco = tacoService.createTaco(taco);
+
+        return tacoMapper.toDto(createdTaco);
     }
 }

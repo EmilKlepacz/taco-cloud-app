@@ -3,6 +3,8 @@ package sia.tacocloud.controller.rest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sia.tacocloud.dto.TacoOrderDTO;
+import sia.tacocloud.mapper.TacoOrderMapper;
 import sia.tacocloud.model.TacoOrder;
 import sia.tacocloud.service.OrderService;
 
@@ -14,21 +16,29 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://tacocloud:8080")
 public class OrderRestController {
     private final OrderService orderService;
+    private final TacoOrderMapper tacoOrderMapper;
 
-    public OrderRestController(OrderService orderService) {
+    public OrderRestController(OrderService orderService,
+                               TacoOrderMapper tacoOrderMapper) {
         this.orderService = orderService;
+        this.tacoOrderMapper = tacoOrderMapper;
     }
 
     @PutMapping(path = "/{orderId}", consumes = "application/json")
-    public TacoOrder updateOrder(@PathVariable("orderId") Long orderId,
-                                 @RequestBody TacoOrder order) {
-        order.setId(orderId);
-        return orderService.updateOrder(orderId, order);
+    public TacoOrderDTO updateOrder(@PathVariable("orderId") Long orderId,
+                                    @RequestBody TacoOrderDTO tacoOrderDTO) {
+
+        TacoOrder tacoOrder = tacoOrderMapper.toEntity(tacoOrderDTO);
+        tacoOrder.setId(orderId);
+
+        TacoOrder updatedOrder = orderService.updateOrder(orderId, tacoOrder);
+
+        return tacoOrderMapper.toDto(updatedOrder);
     }
 
     @PatchMapping(path = "/{orderId}", consumes = "application/json")
-    public ResponseEntity<TacoOrder> patchOrder(@PathVariable("orderId") Long orderId,
-                                                @RequestBody TacoOrder patch) {
+    public ResponseEntity<TacoOrderDTO> patchOrder(@PathVariable("orderId") Long orderId,
+                                                   @RequestBody TacoOrderDTO patch) {
         Optional<TacoOrder> tacoOrderOpt = orderService.getOrderById(orderId);
         if (tacoOrderOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,7 +76,9 @@ public class OrderRestController {
         }
 
         TacoOrder patchedOrder = orderService.saveOrder(tacoOrder);
-        return new ResponseEntity<>(patchedOrder, HttpStatus.OK);
+        TacoOrderDTO patchedOrderDTO = tacoOrderMapper.toDto(patchedOrder);
+
+        return new ResponseEntity<>(patchedOrderDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{orderId}")
