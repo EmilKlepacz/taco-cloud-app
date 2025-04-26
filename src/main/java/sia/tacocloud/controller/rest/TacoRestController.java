@@ -31,7 +31,7 @@ public class TacoRestController {
     }
 
     @GetMapping(params = "recent")
-    public Page<TacoDTO> recentTacos(
+    public ResponseEntity<Page<TacoDTO>> recentTacos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size) {
 
@@ -41,7 +41,9 @@ public class TacoRestController {
         List<TacoDTO> tacoDTOs = tacos.stream()
                 .map(tacoMapper::toDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(tacoDTOs, pageRequest, tacos.getTotalElements());
+
+        Page<TacoDTO> dtoPage = new PageImpl<>(tacoDTOs, pageRequest, tacos.getTotalElements());
+        return ResponseEntity.ok(dtoPage);
     }
 
     @GetMapping("/{id}")
@@ -52,11 +54,11 @@ public class TacoRestController {
     }
 
     @PostMapping(consumes = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public TacoDTO createTaco(@RequestBody TacoDTO tacoDto) {
+    public ResponseEntity<TacoDTO> createTaco(@RequestBody TacoDTO tacoDto) {
         Taco taco = tacoMapper.toEntity(tacoDto);
         Taco createdTaco = tacoService.createTaco(taco);
 
-        return tacoMapper.toDto(createdTaco);
+        TacoDTO createdTacoDTO = tacoMapper.toDto(createdTaco);
+        return ResponseEntity.ok(createdTacoDTO);
     }
 }

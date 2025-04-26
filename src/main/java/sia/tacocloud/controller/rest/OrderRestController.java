@@ -25,15 +25,16 @@ public class OrderRestController {
     }
 
     @PutMapping(path = "/{orderId}", consumes = "application/json")
-    public TacoOrderDTO updateOrder(@PathVariable("orderId") Long orderId,
-                                    @RequestBody TacoOrderDTO tacoOrderDTO) {
+    public ResponseEntity<TacoOrderDTO> updateOrder(@PathVariable("orderId") Long orderId,
+                                                    @RequestBody TacoOrderDTO tacoOrderDTO) {
 
         TacoOrder tacoOrder = tacoOrderMapper.toEntity(tacoOrderDTO);
         tacoOrder.setId(orderId);
 
         TacoOrder updatedOrder = orderService.updateOrder(orderId, tacoOrder);
+        TacoOrderDTO updatedOrderDTO = tacoOrderMapper.toDto(updatedOrder);
 
-        return tacoOrderMapper.toDto(updatedOrder);
+        return ResponseEntity.ok(updatedOrderDTO);
     }
 
     @PatchMapping(path = "/{orderId}", consumes = "application/json")
@@ -41,7 +42,7 @@ public class OrderRestController {
                                                    @RequestBody TacoOrderDTO patch) {
         Optional<TacoOrder> tacoOrderOpt = orderService.getOrderById(orderId);
         if (tacoOrderOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
 
         TacoOrder tacoOrder = tacoOrderOpt.get();
@@ -78,12 +79,12 @@ public class OrderRestController {
         TacoOrder patchedOrder = orderService.saveOrder(tacoOrder);
         TacoOrderDTO patchedOrderDTO = tacoOrderMapper.toDto(patchedOrder);
 
-        return new ResponseEntity<>(patchedOrderDTO, HttpStatus.OK);
+        return ResponseEntity.ok(patchedOrderDTO);
     }
 
     @DeleteMapping("/{orderId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@PathVariable("orderId") Long orderId) {
+    public ResponseEntity<Void> deleteOrder(@PathVariable("orderId") Long orderId) {
         orderService.deleteOrderById(orderId);
+        return ResponseEntity.noContent().build();
     }
 }

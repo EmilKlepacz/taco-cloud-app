@@ -54,7 +54,7 @@ curl -X POST http://localhost:8080/api/tacos \
 { "id": "TMTO", "name": "Diced Tomatoes", "type": "VEGGIES" },
 { "id": "CHED", "name": "Cheddar", "type": "CHEESE" }
 ]
-}' 
+}' | jq
  ``` 
 
 <b>PUT</b>:
@@ -126,3 +126,5 @@ curl "http://localhost:8080/data-api/tacoOrders?page=0&size=5"
 * Mappings generation with MapStruct (binding for Lombok and MapStruct):
     * DTO objects work with REST (REST controllers manually created) 
     * mappings between entities and DTOs. (important: DTOs stored in separate project taco-cloud-dto!)
+* REST Controller Tests using junit + Mockito
+* Web Controller Tests using junit + @WebMvcTest

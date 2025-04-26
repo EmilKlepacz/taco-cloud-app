@@ -8,7 +8,7 @@ import lombok.*;
 
 @Entity
 @Data
-@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Role {
 
