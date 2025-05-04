@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
+        <version>3.4.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>sia</groupId>
@@ -31,6 +31,7 @@
         <lombok.version>1.18.38</lombok.version>
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <taco.cloud.dto.version>1.0-SNAPSHOT</taco.cloud.dto.version>
     </properties>
     <dependencies>
         <dependency>
@@ -105,7 +106,7 @@
         <dependency>
             <groupId>sia</groupId>
             <artifactId>taco-cloud-dto</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${taco.cloud.dto.version}</version>
         </dependency>
     </dependencies>
     <build>

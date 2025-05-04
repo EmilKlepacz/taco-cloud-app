@@ -42,7 +42,7 @@ logging:
     org.hibernate.orm.jdbc.bind: trace
     org.springframework.security: debug
     org.springframework.web: debug
-# below properties are example of custom configuration properties....
+# custom configuration properties:
 taco:
   orders:
     pageSize: 5 # set page size here!
