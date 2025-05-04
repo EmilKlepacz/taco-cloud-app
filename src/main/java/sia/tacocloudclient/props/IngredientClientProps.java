@@ -1,10 +1,12 @@
 package sia.tacocloudclient.props;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "api")
-public class IngredientServiceProps {
+@Data
+public class IngredientClientProps {
     private String baseUrl;
 }
