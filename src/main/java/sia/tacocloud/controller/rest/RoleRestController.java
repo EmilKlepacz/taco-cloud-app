@@ -34,11 +34,7 @@ public class RoleRestController {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Role> roles = roleRepository.findAll(pageRequest);
 
-        List<RoleDTO> roleDTOs = roles.stream()
-                .map(role -> roleMapper.toDto(role))
-                .collect(Collectors.toList());
-
-        Page<RoleDTO> roleDTOPage = new PageImpl<>(roleDTOs, pageRequest, roleDTOs.size());
-        return ResponseEntity.ok(roleDTOPage);
+        Page<RoleDTO> roleDTOS = roles.map(roleMapper::toDto);
+        return ResponseEntity.ok(roleDTOS);
     }
 }

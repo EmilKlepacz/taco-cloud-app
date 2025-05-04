@@ -38,12 +38,8 @@ public class TacoRestController {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Taco> tacos = tacoService.lastAddedTacos(pageRequest);
 
-        List<TacoDTO> tacoDTOs = tacos.stream()
-                .map(tacoMapper::toDto)
-                .collect(Collectors.toList());
-
-        Page<TacoDTO> dtoPage = new PageImpl<>(tacoDTOs, pageRequest, tacos.getTotalElements());
-        return ResponseEntity.ok(dtoPage);
+        Page<TacoDTO> tacoDTOS = tacos.map(tacoMapper::toDto);
+        return ResponseEntity.ok(tacoDTOS);
     }
 
     @GetMapping("/{id}")

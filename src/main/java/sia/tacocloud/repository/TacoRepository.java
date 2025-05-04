@@ -10,7 +10,5 @@ import java.util.Optional;
 public interface TacoRepository extends JpaRepository<Taco, Long> {
     Optional<Taco> findByName(String name);
 
-    Optional<Taco> findById(Long id);
-
     Page<Taco> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

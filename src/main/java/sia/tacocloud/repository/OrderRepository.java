@@ -10,6 +10,4 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<TacoOrder, Long> {
     List<TacoOrder> findByUserOrderByPlacedAtDesc(AppUser user, Pageable pageable);
-
-    Optional<TacoOrder> findById(Long id);
 }

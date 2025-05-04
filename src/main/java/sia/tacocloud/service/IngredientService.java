@@ -1,6 +1,8 @@
 package sia.tacocloud.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import sia.tacocloud.model.Ingredient;
@@ -9,6 +11,7 @@ import sia.tacocloud.model.enums.IngredientType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +21,14 @@ public class IngredientService {
     @Autowired
     public IngredientService(IngredientRepository ingredientRepository) {
         this.ingredientRepository = ingredientRepository;
+    }
+
+    public Optional<Ingredient> getIngredientById(String id) {
+        return ingredientRepository.findById(id);
+    }
+
+    public Page<Ingredient> getAllIngredients(Pageable pageable) {
+        return ingredientRepository.findAll(pageable);
     }
 
     private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, IngredientType type) {
