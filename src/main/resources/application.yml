@@ -3,6 +3,6 @@ spring:
     name: taco-cloud-client
 # custom configuration properties:
 api:
-  baseUrl: http://localhost:8080/api/
+  baseUrl: http://localhost:8080/api
 server:
   port: 8081

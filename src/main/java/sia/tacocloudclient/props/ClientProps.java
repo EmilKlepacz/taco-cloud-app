@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "api")
 @Data
-public class IngredientClientProps {
+public class ClientProps {
     private String baseUrl;
 }

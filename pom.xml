@@ -30,7 +30,9 @@
         <lombok.version>1.18.38</lombok.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <taco.cloud.dto.version>1.0-SNAPSHOT</taco.cloud.dto.version>
+        <httpclient5.version>5.4.4</httpclient5.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -59,6 +61,20 @@
             <artifactId>taco-cloud-dto</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+        <!-- configure RestTemplate to use Apache HttpClient, which supports PATCH http method.-->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>${httpclient5.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
         </dependency>
     </dependencies>
     <build>

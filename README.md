@@ -21,3 +21,7 @@ run the server and then
 ````bash
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ````
+
+#### What have been added here:
+* Clients with the RestTemplate
+* httpclient5 added to support more Java 11+ features
