@@ -31,7 +31,7 @@ public class IngredientClient {
         uriVariables.put("ingredientId", ingredientId);
 
         URI uri = UriComponentsBuilder
-                .fromHttpUrl(props.getBaseUrl() + "/ingredients/{orderId}")
+                .fromHttpUrl(props.getBaseUrl() + "/ingredients/{ingredientId}")
                 .build(uriVariables);
 
         RequestEntity<Void> request = RequestEntity
@@ -61,8 +61,7 @@ public class IngredientClient {
 
         ResponseEntity<HelperPage<IngredientDTO>> response = restTemplate.exchange(
                 request,
-                new ParameterizedTypeReference<>() {
-                }
+                new ParameterizedTypeReference<HelperPage<IngredientDTO>>() {}
         );
 
         return response.getBody();

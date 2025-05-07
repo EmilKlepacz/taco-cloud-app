@@ -11,9 +11,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import sia.tacocloud.dto.IngredientDTO;
+import sia.tacocloud.dto.RoleDTO;
+import sia.tacocloud.dto.TacoDTO;
 import sia.tacocloud.dto.TacoOrderDTO;
+import sia.tacocloud.dto.enums.IngredientType;
 import sia.tacocloudclient.client.IngredientClient;
 import sia.tacocloudclient.client.OrderClient;
+import sia.tacocloudclient.client.RoleClient;
+import sia.tacocloudclient.client.TacoClient;
+
+import java.util.Date;
+import java.util.List;
 
 @SpringBootApplication
 public class TacoCloudClientApplication {
@@ -28,9 +36,11 @@ public class TacoCloudClientApplication {
     @Bean
     @Profile("dev")
     public CommandLineRunner executeAPICalls(IngredientClient ingredientClient,
-                                             OrderClient orderClient) {
+                                             OrderClient orderClient,
+                                             RoleClient roleClient,
+                                             TacoClient tacoClient) {
         return args -> {
-            //some dummy tests to check connection between backend server
+            // checking api calls
             // Ingredient API
             try {
                 IngredientDTO ingredientDTO = ingredientClient.getIngredient("TMTO");
@@ -77,8 +87,44 @@ public class TacoCloudClientApplication {
             } catch (Exception e) {
                 log.error("Failed to delete order", e);
             }
+
+            // Role API
+            try {
+                Page<RoleDTO> roleDTOS = roleClient.getAllRoles(0, 12);
+                log.info("\nFetched roles: {}", mapper.writeValueAsString(roleDTOS.getContent()));
+            } catch (Exception e) {
+                log.error("Failed to fetch roles", e);
+            }
+
+            // Taco API
+            try {
+                Page<TacoDTO> tacoDTOS = tacoClient.getRecentTacos(0, 3);
+                log.info("\nFetched recent tacos: {}", mapper.writeValueAsString(tacoDTOS.getContent()));
+            } catch (Exception e) {
+                log.error("Failed to fetch tacos", e);
+            }
+
+            try {
+                TacoDTO tacoDTO = tacoClient.getTacoById(1L);
+                log.info("\nFetched taco: {}", mapper.writeValueAsString(tacoDTO));
+            } catch (Exception e) {
+                log.error("Failed to fetch taco", e);
+            }
+
+            try {
+                Page<IngredientDTO> ingredientsPage = ingredientClient.getAllIngredients(0, 3);
+                List<IngredientDTO> ingredients = ingredientsPage.getContent();
+
+                TacoDTO toCreate = new TacoDTO();
+                toCreate.setName("DUMMY TACO");
+                toCreate.setCreatedAt(new Date());
+                toCreate.setIngredients(ingredients);
+
+                TacoDTO created = tacoClient.createTaco(toCreate);
+                log.info("\nCreated taco: {}", mapper.writeValueAsString(created));
+            } catch (Exception e) {
+                log.error("Failed to create taco", e);
+            }
         };
-
-
     }
 }
