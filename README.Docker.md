@@ -1,19 +1,22 @@
-### Building and running your application
+### Building and running taco-cloud:
 
-When you're ready, start your application by running:
-`docker compose up --build`.
+this app has dependency of th <b>taco-cloud-dto.jar</b> which can be produced
+by another project: <b>taco-cloud-dto</b>.
 
-Your application will be available at http://localhost:8080.
+This can be optimized but for now, this .jar needs to be build locally
+and then copy to the taco-cloud directory to be used later by Docker
+to install this in container's .m2.
 
-### Deploying your application to the cloud
+Please run firstly:
 
-First, build your image, e.g.: `docker build -t myapp .`.
-If your cloud uses a different CPU architecture than your development
-machine (e.g., you are on a Mac M1 and your cloud provider is amd64),
-you'll want to build the image for that platform, e.g.:
-`docker build --platform=linux/amd64 -t myapp .`.
+````bash
+cp taco-cloud-dto/target/taco-cloud-dto-1.0-SNAPSHOT.jar taco-cloud/ && \
+cp taco-cloud-dto/pom.xml taco-cloud/taco-cloud-dto-pom.xml
+````
 
-Then, push it to your registry, e.g. `docker push myregistry.com/myapp`.
+Then:
 
-Consult Docker's [getting started](https://docs.docker.com/go/get-started-sharing/)
-docs for more detail on building and pushing.
+````bash
+cd taco-cloud
+docker compose up --build 
+````

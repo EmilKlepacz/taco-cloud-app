@@ -1,38 +1,39 @@
-# Create a stage for resolving and downloading dependencies.
-FROM eclipse-temurin:17-jdk-jammy as deps
+####  STAGE 1: Install dependencies and go offline
+FROM eclipse-temurin:17-jdk-jammy AS deps
 
 WORKDIR /build
 
-# Copy the mvnw wrapper with executable permissions.
+# Copy Maven wrapper and configuration
 COPY --chmod=0755 mvnw mvnw
 COPY .mvn/ .mvn/
+COPY pom.xml pom.xml
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.m2 so that subsequent builds don't have to
-# re-download packages.
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 ./mvnw dependency:go-offline -DskipTests
+# Copy the manually built DTO JAR and its POM
+COPY taco-cloud-dto-1.0-SNAPSHOT.jar /tmp/
+COPY taco-cloud-dto-pom.xml /tmp/pom.xml
 
-################################################################################
+# Install DTO jar into Maven local repo and resolve all dependencies offline
+RUN ./mvnw install:install-file \
+      -Dfile=/tmp/taco-cloud-dto-1.0-SNAPSHOT.jar \
+      -DpomFile=/tmp/pom.xml && \
+    ./mvnw dependency:go-offline -DskipTests
 
-FROM deps as package
+### STAGE 2: Build the application
+FROM deps AS package
 
 WORKDIR /build
 
 COPY ./src src/
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 \
-    ./mvnw package -DskipTests && \
-    mv target/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
+COPY pom.xml pom.xml
 
-################################################################################
+# Build the application and copy it to app.jar
+RUN ./mvnw package -DskipTests && \
+    cp target/*.jar target/app.jar
 
-# Create a new stage for running the application that contains the minimal
-# runtime dependencies for the application.
+### STAGE 3: Minimal runtime container
 FROM eclipse-temurin:17-jre-jammy AS final
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
+# Create a non-root app user
 ARG UID=10001
 RUN adduser \
     --disabled-password \
@@ -42,11 +43,11 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
+
 USER appuser
 
-# Copy the executable from the "package" stage.
-COPY --from=package build/target/app.jar app.jar
+COPY --from=package /build/target/app.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT ["java", "-jar", "app.jar"]
