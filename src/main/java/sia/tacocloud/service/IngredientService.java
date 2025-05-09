@@ -1,6 +1,7 @@
 package sia.tacocloud.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,18 @@ public class IngredientService {
         for (IngredientType type : types) {
             model.addAttribute(type.toString().toLowerCase(),
                     filterByType(ingredients, type));
+        }
+    }
+
+    public Ingredient createIngredient(Ingredient ingredient) {
+        return ingredientRepository.save(ingredient);
+    }
+
+    public void deleteIngredientById(String ingredientId) {
+        try {
+            ingredientRepository.deleteById(ingredientId);
+        } catch (EmptyResultDataAccessException e) {
+            //do nothing about it
         }
     }
 

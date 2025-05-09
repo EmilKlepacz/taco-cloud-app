@@ -25,10 +25,6 @@ public class TacoService {
         this.ingredientRepository = ingredientRepository;
     }
 
-    public void saveTaco(Taco taco) {
-        tacoRepository.save(taco);
-    }
-
     public Page<Taco> lastAddedTacos(Pageable pageable) {
         return tacoRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
