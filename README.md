@@ -30,23 +30,29 @@ have for further development with some examples.
 * REST api (added manually by org.springframework.web.bind.annotation) <br>
   examples: <br><br> 
 
+firstly please generate access_token with **taco-cloud-auth-server** project.
+
 <b>GET</b>:
-```bash
-curl -s "http://localhost:8080/api/tacos?recent" | jq
+```
+curl "http://localhost:8080/api/tacos?recent" \
+-H "Authorization: Bearer $access_token | jq
 ```
 
-```bash
-curl "http://localhost:8080/api/tacos?recent&page=0&size=5" | jq
+```
+curl "http://localhost:8080/api/tacos?recent&page=0&size=5" \
+-H "Authorization: Bearer $access_token" | jq
 ``` 
 
-```bash
-curl -s "http://localhost:8080/api/tacos/95" | jq 
+```
+curl -i "http://localhost:8080/api/tacos/95" \
+-H "Authorization: Bearer $access_token" | jq
 ``` 
 
 <b>POST</b>:
-```bash
+```
 curl -X POST http://localhost:8080/api/tacos \
 -H "Content-Type: application/json" \
+-H "Authorization: Bearer $access_token" \
 -d '{
 "name": "Veggie Blast",
 "ingredients": [
@@ -58,9 +64,10 @@ curl -X POST http://localhost:8080/api/tacos \
  ``` 
 
 <b>PUT</b>:
-```bash
+```
 curl -X PUT http://localhost:8080/api/orders/1 \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $access_token" \
   -d '{
     "deliveryName": "Emil Klepacz",
     "deliveryStreet": "Main St",
@@ -85,9 +92,10 @@ curl -X PUT http://localhost:8080/api/orders/1 \
 ```
 
 <b>PATCH</b>:
-```bash
+```
 curl -X PATCH http://localhost:8080/api/orders/1 \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $access_token" \
   -d '{
     "deliveryCity": "Berlin",
     "tacos": [
@@ -105,8 +113,9 @@ curl -X PATCH http://localhost:8080/api/orders/1 \
 ```
 
 <b>DELETE</b>:
-```bash
-curl -s -X DELETE http://localhost:8080/api/orders/1 
+```
+curl -s -X DELETE http://localhost:8080/api/orders/1  \
+-H "Authorization: Bearer $access_token | jq
 ```
 
 ---
@@ -114,12 +123,12 @@ curl -s -X DELETE http://localhost:8080/api/orders/1
 * Spring Data REST: <br>
   to see generated endpoints look at:
 
-```bash
+```
 curl http://localhost:8080/data-api
 ```
 
 example of usage for template based generated endpoint:
-```bash
+```
 curl "http://localhost:8080/data-api/tacoOrders?page=0&size=5"
 ```
 
@@ -128,3 +137,7 @@ curl "http://localhost:8080/data-api/tacoOrders?page=0&size=5"
     * mappings between entities and DTOs. (important: DTOs stored in separate project taco-cloud-dto!)
 * REST Controller Tests using junit + Mockito
 * Web Controller Tests using junit + @WebMvcTest
+
+* **OAuth2 resource server** for API filtering, ensuring that
+  requests for resources that require authorization include a valid access token with the
+  required scope. 

@@ -2,6 +2,7 @@ package sia.tacocloud.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,11 +31,21 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
+                // public
+                .requestMatchers("/", "/login", "/h2-console/**").permitAll()
+
                 // ROLE_USER -> role added for all logged users
                 // OAUTH2_USER -> this is authority granted when logged with gitHub OAuth2
                 .requestMatchers("/design", "/orders").hasAnyAuthority("ROLE_USER", "OAUTH2_USER") // requires authentication
                 .requestMatchers("/admin").hasRole("ADMIN")
-                .requestMatchers("/", "/**").permitAll() // Everything else is public
+
+                //should be matched against OAuth 2 scopes in the access token given on the
+                //request to those resources.
+                .requestMatchers(HttpMethod.POST, "/api/ingredients").hasAuthority("SCOPE_writeIngredients")
+                .requestMatchers(HttpMethod.DELETE, "/api/ingredients").hasAuthority("SCOPE_deleteIngredients")
+
+                // needs access token
+                .requestMatchers("/api/**").authenticated()
 
                 .and()
                 .formLogin(form -> form
@@ -61,6 +72,10 @@ public class SecurityConfig {
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
+
+                // enable resource server (JWT tokens)
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt())
 
                 .build();
     }
