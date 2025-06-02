@@ -1,8 +1,24 @@
 spring:
   application:
     name: taco-cloud-client
+  security:
+    oauth2:
+      client:
+        registration:
+          service-client:
+            provider: taco-auth-server
+            client-id: service-client
+            client-secret: service-secret
+            authorization-grant-type: client_credentials
+            scope: createIngredients,deleteIngredients
+        provider:
+          taco-auth-server:
+            token-uri: http://localhost:9000/oauth2/token
 # custom configuration properties:
 api:
+  # Resource Server (REST API) runs inside a Docker container...
+  # client (taco-cloud-client) runs on your local machine (outside Docker)...
   baseUrl: http://localhost:8080/api
+
 server:
   port: 8081

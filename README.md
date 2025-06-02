@@ -25,3 +25,5 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev
 #### What have been added here:
 * Clients with the RestTemplate
 * httpclient5 added to support more Java 11+ features
+* oauth2 for resources (REST api access) 
+  - AuthorizedClientServiceOAuth2AuthorizedClientManager for non-web (service-to-service)
