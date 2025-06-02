@@ -10,7 +10,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import sia.tacocloud.repository.UserRepository;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -73,10 +78,29 @@ public class SecurityConfig {
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
 
+                .cors()
+                .and()
+
                 // enable resource server (JWT tokens)
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt())
 
                 .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // taco-cloud-client is running on 8081
+        // I want it to access the resource server (running inside Docker)
+        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:8080"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true); // Optional: If you want to allow cookies
+        configuration.setMaxAge(3600L); // Optional: Cache pre-flight response for 1 hour
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

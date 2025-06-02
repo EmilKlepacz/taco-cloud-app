@@ -141,3 +141,5 @@ curl "http://localhost:8080/data-api/tacoOrders?page=0&size=5"
 * **OAuth2 resource server** for API filtering, ensuring that
   requests for resources that require authorization include a valid access token with the
   required scope. 
+* CORS and security configuration (for example You can run
+  local Spring Boot app (**taco-cloud-client**) to call http://localhost:8080/api without being blocked.)
