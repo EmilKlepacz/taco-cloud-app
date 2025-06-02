@@ -4,6 +4,11 @@ This app is just OAuth2 authorization server for the
 for usage in taco-cloud app. For now it is populated with some dummy users data
 to test the basic functionality of oauth2 auth server.
 
+there are 2 client configs
+ - for browser-based login (oauth2Login): to be used in web mvc app -> redirect to login screen
+ - server-to-server communication: for example some other spring boot app calls the auth server for token and then this
+   token is used to make api calls to resource server (REST api) -> **see taco-cloud-client** app which does it
+
 * OAuth2 authorization server:
 
 1. Point Your web browser to:

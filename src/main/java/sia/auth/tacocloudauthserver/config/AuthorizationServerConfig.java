@@ -77,6 +77,7 @@ public class AuthorizationServerConfig {
     public RegisteredClientRepository registeredClientRepository(
             PasswordEncoder passwordEncoder) {
 
+        //for browser-based login (oauth2Login)
         RegisteredClient registeredOidcClient =
                 RegisteredClient.withId(UUID.randomUUID().toString())
                         .clientId("oidc-client")
@@ -100,7 +101,17 @@ public class AuthorizationServerConfig {
                                 .build())
                         .build();
 
-        return new InMemoryRegisteredClientRepository(registeredOidcClient);
+        // for service-to-service
+        RegisteredClient serverToServerClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("service-client")
+                .clientSecret(passwordEncoder.encode("service-secret"))
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .scope("createIngredients")
+                .scope("deleteIngredients")
+                .build();
+
+        return new InMemoryRegisteredClientRepository(registeredOidcClient, serverToServerClient);
     }
 
     @Bean
