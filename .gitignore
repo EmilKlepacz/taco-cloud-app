@@ -1,0 +1,29 @@
+### Build Artifacts ###
+**/target/
+
+# Exclude Maven wrapper binary in any module
+**/.mvn/wrapper/maven-wrapper.jar
+
+### Environment files ###
+**/.env
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+### macOS ###
+**/.DS_Store
