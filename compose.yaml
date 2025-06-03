@@ -1,0 +1,13 @@
+services:
+
+  server:
+    build:
+      context: . # this means that context for server is root (taco-cloud-app)
+                 # this is for Docker to see the dto project when building server container...
+      dockerfile: ./taco-cloud/Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - JWK_SET_URI=${JWK_SET_URI}
